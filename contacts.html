@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts | Job Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Job Application Tracker</h1>
+        <p>Manage your job search in one place.</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/companies">Companies</a>
+        <a href="/jobs">Jobs</a>
+        <a href="/applications">Applications</a>
+        <a href="/contacts">Contacts</a>
+        <a href="/job-match">Job Match</a>
+    </nav>
+
+    <main>
+        {% for message in get_flashed_messages() %}
+            <p>{{ message }}</p>
+        {% endfor %}
+
+        <h2>{{ "Edit Contact" if editing else "Add a Contact" }}</h2>
+
+        {% if companies %}
+            <form method="post"
+                  action="{{ url_for('edit_contact', contact_id=editing.contact_id) if editing else url_for('contacts') }}">
+                <label>
+                    Company *
+                    <select name="company_id" required>
+                        <option value="">Choose a company</option>
+                        {% for company in companies %}
+                            <option value="{{ company.company_id }}"
+                                {% if editing and editing.company_id == company.company_id %}selected{% endif %}>
+                                {{ company.company_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label>
+                    Contact name *
+                    <input name="contact_name" required
+                           value="{{ editing.contact_name if editing else '' }}">
+                </label>
+
+                <label>
+                    Title
+                    <input name="title" value="{{ editing.title if editing else '' }}">
+                </label>
+
+                <label>
+                    Email
+                    <input type="email" name="email"
+                           value="{{ editing.email if editing else '' }}">
+                </label>
+
+                <label>
+                    Phone
+                    <input name="phone" value="{{ editing.phone if editing else '' }}">
+                </label>
+
+                <label>
+                    LinkedIn URL
+                    <input type="url" name="linkedin_url"
+                           value="{{ editing.linkedin_url if editing else '' }}">
+                </label>
+
+                <label>
+                    Notes
+                    <textarea name="notes">{{ editing.notes if editing else '' }}</textarea>
+                </label>
+
+                <button type="submit">
+                    {{ "Save Changes" if editing else "Add Contact" }}
+                </button>
+                {% if editing %}
+                    <a href="{{ url_for('contacts') }}">Cancel</a>
+                {% endif %}
+            </form>
+        {% else %}
+            <p>Add a company first, then you can add contacts for it.</p>
+        {% endif %}
+
+        <h2>Contacts</h2>
+
+        {% if contacts %}
+            <ul>
+                {% for contact in contacts %}
+                    <li>
+                        <strong>{{ contact.contact_name }}</strong>
+                        at {{ contact.company_name }}
+                        {% if contact.title %} — {{ contact.title }}{% endif %}
+                        {% if contact.email %} — {{ contact.email }}{% endif %}
+                        {% if contact.phone %} — {{ contact.phone }}{% endif %}
+                        {% if contact.linkedin_url %}
+                            — <a href="{{ contact.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>
+                        {% endif %}
+                        {% if contact.notes %}<p>{{ contact.notes }}</p>{% endif %}
+
+                        <a href="{{ url_for('edit_contact', contact_id=contact.contact_id) }}">Edit</a>
+
+                        <form method="post"
+                              action="{{ url_for('delete_contact', contact_id=contact.contact_id) }}"
+                              style="display:inline"
+                              onsubmit="return confirm('Delete this contact?');">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No contacts added yet.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

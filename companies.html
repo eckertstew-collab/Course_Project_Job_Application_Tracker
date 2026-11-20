@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companies | Job Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Job Application Tracker</h1>
+        <p>Manage your job search in one place.</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/companies">Companies</a>
+        <a href="/jobs">Jobs</a>
+        <a href="/applications">Applications</a>
+        <a href="/contacts">Contacts</a>
+        <a href="/job-match">Job Match</a>
+    </nav>
+
+    <main>
+        <h2>{{ "Edit Company" if editing else "Add a Company" }}</h2>
+
+        {% for message in get_flashed_messages() %}
+            <p>{{ message }}</p>
+        {% endfor %}
+
+        <form method="post"
+              action="{{ url_for('edit_company', company_id=editing.company_id) if editing else url_for('companies') }}">
+            <label>
+                Company name *
+                <input name="company_name" required
+                       value="{{ editing.company_name if editing else '' }}">
+            </label>
+
+            <label>
+                Industry
+                <input name="industry" value="{{ editing.industry if editing else '' }}">
+            </label>
+
+            <label>
+                Website
+                <input name="website" value="{{ editing.website if editing else '' }}">
+            </label>
+
+            <label>
+                City
+                <input name="city" value="{{ editing.city if editing else '' }}">
+            </label>
+            <br>
+            <label>
+                State
+                <input name="state" value="{{ editing.state if editing else '' }}">
+            </label>
+
+
+            <button type="submit">{{ "Save Changes" if editing else "Add Company" }}</button>
+            {% if editing %}
+                <a href="{{ url_for('companies') }}">Cancel</a>
+            {% endif %}
+
+        </form>
+
+        <h2>Companies</h2>
+
+        {% if companies %}
+            <ul>
+                {% for company in companies %}
+                    <li>
+                        <strong>{{ company.company_name }}</strong>
+                        {% if company.industry %} — {{ company.industry }}{% endif %}
+                        {% if company.city or company.state %}
+                            <span>({{ company.city or "" }}{% if company.city and company.state %}, {% endif %}{{ company.state or "" }})</span>
+                        {% endif %}
+
+                        <a href="{{ url_for('edit_company', company_id=company.company_id) }}">Edit</a>
+
+                        <form method="post"
+                              action="{{ url_for('delete_company', company_id=company.company_id) }}"
+                              style="display:inline"
+                              onsubmit="return confirm('Delete this company?');">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No companies added yet.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

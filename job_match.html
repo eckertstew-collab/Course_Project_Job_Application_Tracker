@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Match | Job Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Job Application Tracker</h1>
+        <p>Manage your job search in one place.</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/companies">Companies</a>
+        <a href="/jobs">Jobs</a>
+        <a href="/applications">Applications</a>
+        <a href="/contacts">Contacts</a>
+        <a href="/job-match">Job Match</a>
+    </nav>
+
+    <main>
+        <h2>Find Jobs That Match Your Skills</h2>
+        <p>Enter skills separated by commas, such as Python, SQL, Flask.</p>
+
+        <form method="post" action="{{ url_for('job_match') }}">
+            <label>
+                Your skills
+                <input name="skills" value="{{ entered_skills }}"
+                       placeholder="Python, SQL, Flask">
+            </label>
+            <button type="submit">Find Matches</button>
+        </form>
+
+        {% if searched %}
+            <h2>Matching Jobs</h2>
+
+            {% if matches %}
+                <ol>
+                    {% for item in matches %}
+                        <li>
+                            <strong>{{ item.job.job_title }}</strong>
+                            at {{ item.job.company_name }}
+
+                            {% if item.percentage is not none %}
+                                — {{ item.percentage }}%
+                                ({{ item.matched_skills|length }}/{{ item.required_skills|length }} skills)
+                            {% else %}
+                                — No requirements listed
+                            {% endif %}
+
+                            {% if item.job.job_url %}
+                                <p>
+                                    <a href="{{ item.job.job_url }}" target="_blank" rel="noopener">
+                                        View job posting
+                                    </a>
+                                </p>
+                            {% endif %}
+
+                            {% if item.matched_skills %}
+                                <p>Matched: {{ item.matched_skills|join(", ") }}</p>
+                            {% endif %}
+
+                            {% if item.missing_skills %}
+                                <p>Missing: {{ item.missing_skills|join(", ") }}</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% else %}
+                <p>No jobs found. Add jobs and their requirements first.</p>
+            {% endif %}
+        {% endif %}
+    </main>
+</body>
+</html>

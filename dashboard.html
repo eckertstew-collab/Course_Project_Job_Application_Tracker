@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Job Tracker | Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>Job Application Tracker</h1>
+        <p>Manage your job search in one place.</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/companies">Companies</a>
+        <a href="/jobs">Jobs</a>
+        <a href="/applications">Applications</a>
+        <a href="/contacts">Contacts</a>
+        <a href="/job-match">Job Match</a>
+    </nav>
+
+    <main>
+
+        <h2>Dashboard Overview</h2>
+
+        <p>Welcome to your Job Application Tracker!</p>
+
+        <section class="dashboard-grid">
+
+            <div class="stat-card">
+                <h3>Companies</h3>
+                <p>{{ stats.companies }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Jobs</h3>
+                <p>{{ stats.jobs }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Applications</h3>
+                <p>{{ stats.applications }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Contacts</h3>
+                <p>{{ stats.contacts }}</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Job Application Tracker | Course Project</p>
+    </footer>
+
+</body>
+</html>
