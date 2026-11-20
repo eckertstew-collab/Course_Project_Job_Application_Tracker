@@ -1,7 +1,7 @@
 # Course_Project_Job_Application_Tracker
 
 
-1. Open MySQL workbench and execute the sql script (scheme.sql) provided
+1. Open MySQL workbench and execute the sql script (scheme.sql) provided (You may have to modify database.py so the databases password and username are correct)
 2.  install virtual studio code
 3.  open virtual studio code and make a new terminal
 4.  open the folder provided using virual stuio code or other another code editor.
